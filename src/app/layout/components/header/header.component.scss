@@ -1,0 +1,62 @@
+:host {
+  display: block;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.header-title {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.menu-button {
+  margin-right: 16px;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+
+  .username {
+    margin-left: 8px;
+  }
+}
+
+::ng-deep {
+  .user-email {
+    pointer-events: none;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  .logout-button {
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+}

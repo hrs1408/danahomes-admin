@@ -1,0 +1,19 @@
+<div class="sidenav-container">
+  <div class="sidenav-header">
+    <div class="logo">
+      <span class="logo-text">Dana Homes</span>
+    </div>
+  </div>
+
+  <mat-nav-list class="nav-list">
+    <a mat-list-item
+       *ngFor="let item of menuItems"
+       [routerLink]="item.link"
+       routerLinkActive="active-item"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-item">
+      <mat-icon matListItemIcon class="nav-icon">{{item.icon}}</mat-icon>
+      <span matListItemTitle class="nav-text">{{item.text}}</span>
+    </a>
+  </mat-nav-list>
+</div>

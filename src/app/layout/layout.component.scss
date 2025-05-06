@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.sidenav-container {
+  height: 100%;
+  background-color: #f3f4f6;
+}
+
+.sidenav {
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-area {
+  flex: 1;
+  padding: 24px;
+  background-color: #f3f4f6;
+}
+
+@media screen and (max-width: 768px) {
+  .sidenav {
+    width: 100%;
+  }
+
+  .content-area {
+    padding: 16px;
+  }
+}
