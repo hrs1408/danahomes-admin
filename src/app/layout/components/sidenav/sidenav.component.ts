@@ -15,7 +15,7 @@ export class SidenavComponent {
     { icon: 'info', text: 'Site Info', link: '/site-info' },
     { icon: 'category', text: 'Categories', link: '/categories' },
     { icon: 'label', text: 'Tags', link: '/tags' },
-    { icon: 'home', text: 'Properties', link: '/properties' },
+    { icon: 'home', text: 'Products', link: '/products' },
     { icon: 'article', text: 'Posts', link: '/posts' }
   ];
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, of, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthResponse, LoginCredentials, User } from '../interfaces/auth.interface';
+import { AuthResponse, LoginCredentials, User, UserResponse } from '../interfaces/auth.interface';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -25,19 +25,37 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
       .pipe(
         tap({
-          next: (response) => {
-            localStorage.setItem(environment.tokenKey, response.access_token);
-            localStorage.setItem(environment.userKey, JSON.stringify(response.user));
-            this.currentUserSubject.next(response.user);
+          next: (response: AuthResponse) => {
+            localStorage.setItem(environment.tokenKey, response.data.access_token);
             this.snackBar.open('Login successful', 'Close', { duration: 3000 });
+            // Fetch user info after successful login
+            this.fetchUserInfo().subscribe();
           },
           error: (error) => {
-            this.snackBar.open(error.error.message || 'Login failed', 'Close', {
+            this.snackBar.open(error.error?.message || 'Login failed', 'Close', {
               duration: 3000,
               panelClass: ['error-snackbar']
             });
           }
         })
+      );
+  }
+
+  fetchUserInfo(): Observable<User | null> {
+    return this.http.get<UserResponse>(`${environment.apiUrl}/auth/me`)
+      .pipe(
+        tap(response => {
+          if (response.data) {
+            localStorage.setItem(environment.userKey, JSON.stringify(response.data));
+            this.currentUserSubject.next(response.data);
+          }
+        }),
+        catchError(error => {
+          console.error('Error fetching user info:', error);
+          this.logout();
+          return of(null);
+        }),
+        map(response => response?.data || null)
       );
   }
 
@@ -50,7 +68,15 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) return false;
+
+    // If we have a token but no user info, try to fetch it
+    if (!this.getCurrentUser()) {
+      this.fetchUserInfo().subscribe();
+    }
+
+    return true;
   }
 
   getToken(): string | null {
@@ -62,13 +88,21 @@ export class AuthService {
   }
 
   private loadStoredUser(): void {
+    const token = this.getToken();
     const storedUser = localStorage.getItem(environment.userKey);
-    if (storedUser) {
-      try {
-        this.currentUserSubject.next(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        this.logout();
+
+    if (token) {
+      if (storedUser) {
+        try {
+          this.currentUserSubject.next(JSON.parse(storedUser));
+        } catch (error) {
+          console.error('Error parsing stored user:', error);
+          this.logout();
+          return;
+        }
+      } else {
+        // If we have a token but no stored user, fetch user info
+        this.fetchUserInfo().subscribe();
       }
     }
   }

@@ -3,18 +3,36 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface AuthResponse {
-  access_token: string;
-  user: User;
-}
-
 export interface User {
   id: number;
   email: string;
-  name: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
+  user_role: string;
+  is_active: boolean;
+  user_information: any;
+}
+
+export interface AuthResponse {
+  data: {
+    token_type: string;
+    access_token: string;
+    access_token_expires: string;
+    refresh_token: string;
+    refresh_token_expires: string;
+  };
+  meta: {
+    error: boolean;
+    message: string | null;
+  };
+  status_code: number;
+}
+
+export interface UserResponse {
+  data: User;
+  meta: {
+    error: boolean;
+    message: string | null;
+  };
+  status_code: number;
 }
 
 export interface AuthState {

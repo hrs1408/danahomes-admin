@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class DashboardComponent {
   cards = [
     { title: 'Users', count: 0, icon: 'people', link: '/users' },
-    { title: 'Properties', count: 0, icon: 'home', link: '/properties' },
+    { title: 'Products', count: 0, icon: 'home', link: '/products' },
     { title: 'Posts', count: 0, icon: 'article', link: '/posts' },
     { title: 'Categories', count: 0, icon: 'category', link: '/categories' },
     { title: 'Tags', count: 0, icon: 'label', link: '/tags' }
